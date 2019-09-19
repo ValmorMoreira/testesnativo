@@ -11,6 +11,9 @@ export class AboutPage {
   resp_coords: any;
   latitude: any;
   longitude: any;
+  altitude: any;
+  accuracy: any;
+  speed: any;
 
 
   constructor(public navCtrl: NavController,
@@ -25,17 +28,23 @@ export class AboutPage {
         this.resp_coords = resp.coords;
         this.latitude = this.resp_coords.latitude;
         this.longitude = this.resp_coords.longitude;
+        this.altitude = this.resp_coords.altitude;
+        this.accuracy = this.resp_coords.accuracy;
+        this.speed = this.resp_coords.speed;
         console.log(resp);
       }).catch((error) => {
         console.log('Erro ao recuperar sua posição')
         console.log(error);
       });
 
-      let watch = this.geolocation.watchPosition();
+      let watch = this.geolocation.watchPosition(); 
       watch.subscribe((resp) => {
         this.resp_coords = resp.coords;
         this.latitude = this.resp_coords.latitude;
         this.longitude = this.resp_coords.longitude;
+        this.altitude = this.resp_coords.altitude;
+        this.accuracy = this.resp_coords.accuracy;
+        this.speed = this.resp_coords.speed;
       },(error) => {
       console.log(error);
     });
