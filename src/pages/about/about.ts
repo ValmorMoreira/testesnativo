@@ -49,6 +49,6 @@ export class AboutPage {
       console.log(error);
     });
   }
-  
+
 
 }
