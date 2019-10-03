@@ -5,12 +5,10 @@ import { Geolocation } from '@ionic-native/geolocation';
 import {
   GoogleMaps,
   GoogleMap,
-  GoogleMapsEvent,
   GoogleMapOptions,
-  CameraPosition,
-  MarkerOptions,
-  Marker,
-  Environment
+  Environment,
+  Circle,
+  CircleOptions
 } from '@ionic-native/google-maps';
 
 
@@ -18,9 +16,6 @@ import {
   selector: 'page-about',
   templateUrl: 'about.html'
 })
-export class Circle{
-
-}
 
 export class AboutPage {
 
@@ -35,52 +30,57 @@ export class AboutPage {
 
 
   constructor(public navCtrl: NavController,
-     private geolocation: Geolocation
-    ) {
+    private geolocation: Geolocation
+  ) {
 
   }
 
   loadMap() {
     let api_key = 'AIzaSyB5kxJ96SiNeyfJFtxzomK16EOEqFjqtVY'
-Environment.setEnv({
-  'API_KEY_FOR_BROWSER_RELEASE': api_key,
-  'API_KEY_FOR_BROWSER_DEBUG': api_key
-});
+    Environment.setEnv({
+      'API_KEY_FOR_BROWSER_RELEASE': api_key,
+      'API_KEY_FOR_BROWSER_DEBUG': api_key
+    });
 
-let mapOptions: GoogleMapOptions = {
-  camera: {
-    target: {
-      lat: this.latitude,
-      lng: this.longitude
-    },
-    zoom: 18,
-    tilt: 30
-  }
-}
-
-let circle: Circle = this.map.addCircleSync({
-  'center': GOOGLE,
-  'radius': 300,
-  'strokeColor' : '#AA00FF',
-  'strokeWidth': 5,
-  'fillColor' : '#880000'
-});
-
-this.map = GoogleMaps.create('map', mapOptions);
-let marker: Marker = this.map.addMarkerSync({
-      title: 'Eu',
-      icon: 'blue',
-      animation: 'DROP',
-      position: {
-        lat: this.latitude,
-        lng: this.longitude
+    let mapOptions: GoogleMapOptions = {
+      camera: {
+        target: {
+          lat: this.latitude,
+          lng: this.longitude
+        },
+        zoom: 18,
+        tilt: 0
       }
-});
-marker.showInfoWindow();
+    }
+
+    this.map = GoogleMaps.create('map', mapOptions);
+    // let marker: Marker = this.map.addMarkerSync({
+    //   title: 'Eu',
+    //   icon: 'blue',
+    //   animation: 'DROP',
+    //   position: {
+    //     lat: this.latitude,
+    //     lng: this.longitude
+    //   }
+    // });
+
+    let options: CircleOptions = {
+      'center': {'lat' : this.latitude, 'lng' : this.longitude},
+      'radius': 5,
+      'strokeColor' : '#AA00FF',
+      'strokeWidth': 5,
+      'fillColor' : '#be0fe8'
+    };
+    
+    this.map.addCircle(options).then((circle: Circle) => {
+    
+    });
+  
+    // marker.showInfoWindow();
 
   }
 
-  
+
   ionViewDidLoad() {
     this.geolocation.getCurrentPosition()
       .then((resp) => {
@@ -98,17 +98,17 @@ marker.showInfoWindow();
         console.log(error);
       });
 
-      let watch = this.geolocation.watchPosition(); 
-      watch.subscribe((resp) => {
-        this.resp_coords = resp.coords;
-        this.latitude = this.resp_coords.latitude;
-        this.longitude = this.resp_coords.longitude;
-        this.altitude = this.resp_coords.altitude;
-        this.accuracy = this.resp_coords.accuracy;
-        this.speed = this.resp_coords.speed;
-        this.loadMap();
+    let watch = this.geolocation.watchPosition();
+    watch.subscribe((resp) => {
+      this.resp_coords = resp.coords;
+      this.latitude = this.resp_coords.latitude;
+      this.longitude = this.resp_coords.longitude;
+      this.altitude = this.resp_coords.altitude;
+      this.accuracy = this.resp_coords.accuracy;
+      this.speed = this.resp_coords.speed;
+      this.loadMap();
 
-      },(error) => {
+    }, (error) => {
       console.log(error);
     });
   }
